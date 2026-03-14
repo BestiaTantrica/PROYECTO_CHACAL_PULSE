@@ -15,8 +15,8 @@ setlocal enabledelayedexpansion
 REM Configuración
 set "PROJECT_DIR=c:\ai_trading_agent\PROYECTO_CHACAL_PULSE"
 set "LOG_FILE=%PROJECT_DIR%\logs\startup.log"
-set "TELEGRAM_BOT_TOKEN=8733469976:AAHj8ZhIxRn0i9rNwau8ih8ygYoGbfYS6Ds"
-set "TELEGRAM_CHAT_ID=6527908321"
+set "TELEGRAM_BOT_TOKEN=%TELEGRAM_BOT_TOKEN%"
+set "TELEGRAM_CHAT_ID=%TELEGRAM_CHAT_ID%"
 set "FREQTRADE_API_URL=http://localhost:8080"
 set "FREQTRADE_API_KEY=freqtrade"
 set "FREQTRADE_API_PASS=chacal2026"
