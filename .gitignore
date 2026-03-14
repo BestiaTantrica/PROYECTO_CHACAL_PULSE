@@ -1,0 +1,47 @@
+# ============================================================
+# CHACAL PULSE - Git Ignore
+# ============================================================
+# Archivos que NO deben subirse a Git
+
+# Secrets y Configuración
+config.json
+config/*.json
+.env
+*.env
+*.pem
+*.key
+*.crt
+
+# Logs
+logs/
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+
+# Docker
+*.sock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Datos de Freqtrade
+data/
+user_data/
+
+# Backups
+config/backups/
+*.bak

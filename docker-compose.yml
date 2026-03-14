@@ -1,0 +1,36 @@
+version: '3.8'
+
+# ============================================================
+# CHACAL PULSE V4.1 - Docker Compose (DRY RUN)
+# ============================================================
+# Contenedor principal de Freqtrade para el Sistema Chacal Pulse
+
+services:
+  freqtrade:
+    image: freqtradeorg/freqtrade:develop
+    container_name: freqtrade
+    restart: unless-stopped
+    ports:
+      - "8080:8080"   # API REST
+      - "8888:8888"   # Telegram webhook (si se usa)
+    volumes:
+      - ./config:/freqtrade/config
+      - ./strategies:/freqtrade/user_data/strategies
+      - ./logs:/freqtrade/user_data/logs
+      - ./data:/freqtrade/user_data/data
+    environment:
+      - TZ=America/Buenos_Aires
+      - FREQTRADE__API_SERVER__ENABLED=true
+      - FREQTRADE__API_SERVER__JWT_SECRET_KEY=live-secreto-2026-chacal
+      - TELEGRAM_BOT_TOKEN=8733469976:AAHj8ZhIxRn0i9rNwau8ih8ygYoGbfYS6Ds
+      - TELEGRAM_CHAT_ID=6527908321
+    command: >
+      trade
+      --config /freqtrade/config/config.json
+      --strategy ChacalPulseV4_Bull
+    networks:
+      - ChacalNet
+
+networks:
+  ChacalNet:
+    driver: bridge
