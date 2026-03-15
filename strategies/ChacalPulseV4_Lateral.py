@@ -56,15 +56,23 @@ class ChacalPulseV4_Lateral(IStrategy):
         dataframe['date_utc'] = pd.to_datetime(dataframe['date'], utc=True)
         dataframe['hour']     = dataframe['date_utc'].dt.hour
         dataframe['day_of_week'] = dataframe['date_utc'].dt.dayofweek
-        dataframe['is_weekend'] = (dataframe['day_of_week'] >= 5).astype(int)
-
-        dataframe['gate_open'] = (
-            (dataframe['hour'] >= self.gate_start_h.value) &
-            (dataframe['hour'] < self.gate_end_h.value) &
-            (dataframe['is_weekend'] == 0)
-        ).astype(int)
+        dataframe['is_weekend'] = 0 # Liberado para Dry Run
+        dataframe['gate_open'] = 1 # Liberado para Dry Run
 
         dataframe['price_change'] = (dataframe['close'] - dataframe['open']) / dataframe['open']
+
+        # Gestión Horaria - Salida Programada Hoy (15 de Marzo)
+        # 12:30 Art = 15:30 UTC | 13:00 Art = 16:00 UTC
+        dataframe['exit_scheduled'] = 0
+        dataframe.loc[dataframe['hour'] >= 16, 'exit_scheduled'] = 1
+
+        # Restricción de entrada: No entrar después de las 15:30 UTC (12:30 Art)
+        dataframe['entry_allowed'] = 1
+        # Simplificación: si es >= 16h cerramos todo, si es >= 15h y min >= 30 bloqueamos entrada
+        # Pero freqtrade maneja horas UTC. 
+        # Para ser precisos, usamos una marca temporal de la vela
+        dataframe['is_after_1530_utc'] = (dataframe['hour'] > 15) | ((dataframe['hour'] == 15) & (dataframe['date_utc'].dt.minute >= 30))
+        dataframe.loc[dataframe['is_after_1530_utc'], 'entry_allowed'] = 0
 
         volume_1h = dataframe['volume'].rolling(12).mean().replace(0, np.nan)
         dataframe['volume_regime_scaler'] = (
@@ -81,6 +89,10 @@ class ChacalPulseV4_Lateral(IStrategy):
                     current_profit: float, **kwargs):
         if current_profit >= self.lateral_roi.value:
             return "lateral_roi_winner"
+        
+        # Cierre forzoso programado (Hoy 13:00 Art / 16:00 UTC)
+        if current_time.hour >= 16:
+            return "scheduled_exit_13h_art"
         
         try:
             dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
@@ -106,6 +118,7 @@ class ChacalPulseV4_Lateral(IStrategy):
 
         pulse_long = (
             (dataframe['gate_open'] == 1) &
+            (dataframe['entry_allowed'] == 1) &
             (dataframe['rsi'] < self.rsi_oversold.value) &
             (dataframe['rsi'] > 15) &
             (

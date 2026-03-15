@@ -52,13 +52,8 @@ class ChacalPulseV4_Bear(IStrategy):
         dataframe['date_utc'] = pd.to_datetime(dataframe['date'], utc=True)
         dataframe['hour']     = dataframe['date_utc'].dt.hour
         dataframe['day_of_week'] = dataframe['date_utc'].dt.dayofweek
-        dataframe['is_weekend'] = (dataframe['day_of_week'] >= 5).astype(int)
-
-        dataframe['gate_open'] = (
-            (dataframe['hour'] >= self.gate_start_h.value) &
-            (dataframe['hour'] < self.gate_end_h.value) &
-            (dataframe['is_weekend'] == 0)
-        ).astype(int)
+        dataframe['is_weekend'] = 0 # Liberado para Dry Run
+        dataframe['gate_open'] = 1 # Liberado para Dry Run
 
         dataframe['price_change'] = (dataframe['close'] - dataframe['open']) / dataframe['open']
         

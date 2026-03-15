@@ -118,15 +118,15 @@ def execute_kill_switch(reason: str) -> bool:
         requests.post(url, auth=auth, timeout=10)
         
         message = f"""
-⚠️ <b>KILL SWITCH ACTIVADO</b>
+[KILL SWITCH ACTIVADO]
 
-🛡️ <b>RAZÓN:</b> {reason}
+RAZON: {reason}
 
-⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-Ejecutando protección de capital...
+Ejecutando proteccion de capital...
 ---
-<i>Chacal Pulse V4.1</i>
+Chacal Pulse V4.1
 """
         send_telegram(message)
         logger.info("✅ Kill Switch ejecutado")
@@ -150,7 +150,7 @@ def detect_sudden_change(current_regime: str) -> bool:
     sudden_changes = [('BEAR', 'BULL'), ('BULL', 'BEAR')]
     
     if (_last_regime, current_regime) in sudden_changes:
-        logger.warning(f"⚠️ CAMBIO BRUSCO: {_last_regime} -> {current_regime}")
+        logger.warning(f"CAMBIO BRUSCO: {_last_regime} -> {current_regime}")
         return True
     
     _last_regime = current_regime
@@ -173,7 +173,7 @@ def confirm_regime(regime: str) -> bool:
         return False
     
     if _regime_history[0] == _regime_history[1] == regime:
-        logger.info(f"✅ Régimen confirmado: {regime} (2 velas)")
+        logger.info(f"Regimen confirmado: {regime} (2 velas)")
         return True
     
     return False
@@ -227,10 +227,10 @@ def change_strategy_via_bat(regime: str) -> bool:
     """Cambia estrategia usando switch_strategy.bat"""
     try:
         script_path = os.path.join(PROJECT_DIR, "switch_strategy.bat")
-        result = subprocess.run([script_path, regime], capture_output=True, text=True, timeout=60)
+        result = subprocess.run([script_path, regime], capture_output=True, text=True, timeout=60, shell=True)
         
         if result.returncode == 0:
-            logger.info(f"✅ Estrategia cambiada a {regime}")
+            logger.info(f"Estrategia cambiada a {regime}")
             return True
         else:
             logger.error(f"Error: {result.stderr}")
@@ -314,7 +314,7 @@ def analyze_regime() -> Tuple[str, Dict]:
     regimes = []
     details = {'pairs_analyzed': 0, 'confidence': 0, 'vote_distribution': {}}
     
-    logger.info("🔍 Analizando mercado...")
+    logger.info("Analizando mercado...")
     
     for pair in PAIRS[:5]:
         regime = analyze_pair(pair)
@@ -331,25 +331,25 @@ def analyze_regime() -> Tuple[str, Dict]:
     details['confidence'] = confidence
     details['vote_distribution'] = dict(Counter(regimes))
     
-    logger.info(f"📊 Régimen: {vote} (confianza: {confidence:.0%})")
+    logger.info(f"Regimen: {vote} (confianza: {confidence:.0%})")
     return vote, details
 
 
 def automatic_mode() -> int:
     """Modo automático completo con Capa de Riesgo"""
-    logger.info("🚀 Modo automático iniciado")
+    logger.info("Modo automatico iniciado")
     
     regime, details = analyze_regime()
     
     if not confirm_regime(regime):
-        logger.info(f"⏳ {regime} sin confirmar...")
+        logger.info(f"--- {regime} sin confirmar...")
         return 0
     
     current = get_current_strategy()
     target = STRATEGIES[regime]
     
     if current == target:
-        logger.info(f"✅ Ya está en {target}")
+        logger.info(f"Ya esta en {target}")
         return 0
     
     # CAPA DE RIESGO
@@ -363,17 +363,17 @@ def automatic_mode() -> int:
     
     if success:
         msg = f"""
-🦅 <b>CAMBIO AUTOMÁTICO</b>
+[CAMBIO AUTOMATICO]
 
-📊 Régimen: <b>{regime}</b>
-🎯 Estrategia: {target}
+Regimen: {regime}
+Estrategia: {target}
 
-📈 Confianza: {details['confidence']*100:.0f}%
-📊 Dist: {details['vote_distribution']}
+Confianza: {details['confidence']*100:.0f}%
+Dist: {details['vote_distribution']}
 
-⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 ---
-<i>Chacal Pulse V4.1</i>
+Chacal Pulse V4.1
 """
         send_telegram(msg)
     
@@ -394,14 +394,14 @@ def main():
     elif args.check:
         regime, details = analyze_regime()
         msg = f"""
-🦅 <b>ANÁLISIS</b>
+🦅 ANÁLISIS
 
-📊 Régimen: <b>{regime}</b>
-🎯 Estrategia: {STRATEGIES[regime]}
+Régimen: {regime}
+Estrategia: {STRATEGIES[regime]}
 
-📈 Confianza: {details['confidence']*100:.0f}%
+Confianza: {details['confidence']*100:.0f}%
 ---
-<i>Chacal Pulse</i>
+Chacal Pulse
 """
         send_telegram(msg)
         print(f"Régimen: {regime}")

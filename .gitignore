@@ -5,7 +5,6 @@
 
 # Secrets y Configuración
 config.json
-config/*.json
 .env
 *.env
 *.pem

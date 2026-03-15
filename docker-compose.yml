@@ -27,7 +27,7 @@ services:
     command: >
       trade
       --config /freqtrade/config/config.json
-      --strategy ChacalPulseV4_Bull
+      --config /freqtrade/config/config.json
     networks:
       - ChacalNet
 
