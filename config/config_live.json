@@ -31,8 +31,8 @@
     },
     "exchange": {
         "name": "binance",
-        "key": "ARXrHPTHQapCRsXHLRabprCfhWgaZC3L7R6PkpQjzQHisbDKQNurvLEECCfYiIPD",
-        "secret": "592UT0nfA3T6jRnJE3NppwtsGsaoc02kjSm0rv8jlOv6p3j3rGMQS33tjj6Mp7Nl",
+        "key": "<BINANCE_API_KEY>",
+        "secret": "<BINANCE_API_SECRET>",
         "ccxt_config": {
             "options": {
                 "defaultType": "swap"
@@ -62,7 +62,7 @@
     ],
     "telegram": {
         "enabled": true,
-        "token": "8711731449:AAGK6aytUX0YZVu0GiRIhqc1zshmtTupCa8",
+        "token": "<TELEGRAM_BOT_TOKEN>",
         "chat_id": "6527908321"
     },
     "bot_name": "Chacal-LIVE",
@@ -74,7 +74,7 @@
         "listen_ip_address": "0.0.0.0",
         "listen_port": 8080,
         "username": "freqtrade",
-        "password": "chacal2026",
-        "jwt_secret_key": "live-secreto-2026-chacal"
+        "password": "<API_SERVER_PASSWORD>",
+        "jwt_secret_key": "<API_JWT_SECRET>"
     }
 }
