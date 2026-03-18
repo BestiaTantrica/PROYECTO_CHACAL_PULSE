@@ -1,5 +1,5 @@
 {
-    "max_open_trades": 9,
+    "max_open_trades": 12,
     "stake_currency": "USDT",
     "stake_amount": "unlimited",
     "tradeable_balance_ratio": 0.90,
@@ -68,7 +68,7 @@
     "bot_name": "Chacal-LIVE",
     "initial_state": "running",
     "timeframe": "5m",
-    "strategy": "ChacalPulseV4_Lateral",
+    "strategy": "ChacalPulseV4_Compuesta",
     "api_server": {
         "enabled": true,
         "listen_ip_address": "0.0.0.0",
